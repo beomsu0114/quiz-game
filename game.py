@@ -22,6 +22,13 @@ class QuizGame:
                 continue
             return val
 
+    def get_non_empty_str(self, prompt: str) -> str:
+        while True:
+            text = input(prompt).strip()
+            if text:
+                return text
+            print("⚠️ 내용을 입력해주세요.")
+
     def display_menu(self) -> None:
         print("\n" + "=" * 40)
         print("        🎯 나만의 퀴즈 게임 🎯")
@@ -59,12 +66,22 @@ class QuizGame:
             print("🎉 새로운 최고 점수입니다!")
         print("=" * 40)
 
+    def add_quiz(self) -> None:
+        print("\n📌 새로운 퀴즈를 추가합니다.")
+        q = self.get_non_empty_str("문제를 입력하세요: ")
+        choices = [self.get_non_empty_str(f"선택지 {i}: ") for i in range(1, 5)]
+        ans = self.get_valid_int("정답 번호 (1-4): ", 1, 4)
+        self.quizzes.append(Quiz(q, choices, ans))
+        print("✅ 퀴즈가 추가되었습니다!")
+
     def run(self) -> None:
         while True:
             self.display_menu()
             choice = self.get_valid_int("선택: ", 1, 5)
             if choice == 1:
                 self.play_quiz()
+            elif choice == 2:
+                self.add_quiz()
             elif choice == 5:
                 print("\n👋 게임을 종료합니다.")
                 break
