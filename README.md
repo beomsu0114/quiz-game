@@ -46,3 +46,5 @@ quiz-game/
     "best_score": 100
 }
 ```
+
+- Git clone 및 pull 실습 완료
