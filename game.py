@@ -1,10 +1,44 @@
+import json
+import os
 from quiz import Quiz, get_default_quizzes
 
 
 class QuizGame:
-    def __init__(self):
-        self.quizzes = get_default_quizzes()
-        self.best_score = None
+    def __init__(self, state_file: str = "state.json"):
+        self.state_file = state_file
+        self.quizzes: list[Quiz] = []
+        self.best_score: int | None = None
+        self.load_state()
+
+    def load_state(self) -> None:
+        if not os.path.exists(self.state_file):
+            self.quizzes = get_default_quizzes()
+            self.best_score = None
+            self.save_state()
+            return
+        try:
+            with open(self.state_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            self.quizzes = [Quiz.from_dict(q) for q in data["quizzes"]]
+            self.best_score = data.get("best_score")
+            score_str = f"{self.best_score}점" if self.best_score is not None else "기록 없음"
+            print(f"📂 저장된 데이터를 불러왔습니다. (퀴즈 {len(self.quizzes)}개, 최고점수 {score_str})")
+        except (json.JSONDecodeError, KeyError, ValueError, OSError):
+            print("⚠️ 데이터 파일이 손상되어 기본 퀴즈로 복구합니다.")
+            self.quizzes = get_default_quizzes()
+            self.best_score = None
+            self.save_state()
+
+    def save_state(self) -> None:
+        data = {
+            "quizzes": [q.to_dict() for q in self.quizzes],
+            "best_score": self.best_score,
+        }
+        try:
+            with open(self.state_file, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=4)
+        except OSError as e:
+            print(f"⚠️ 데이터 저장 중 오류가 발생했습니다: {e}")
 
     def get_valid_int(self, prompt: str, min_val: int, max_val: int) -> int:
         while True:
@@ -63,6 +97,7 @@ class QuizGame:
         print(f"🏆 결과: {total}문제 중 {correct}문제 정답! ({score}점)")
         if self.best_score is None or score > self.best_score:
             self.best_score = score
+            self.save_state()
             print("🎉 새로운 최고 점수입니다!")
         print("=" * 40)
 
@@ -72,6 +107,7 @@ class QuizGame:
         choices = [self.get_non_empty_str(f"선택지 {i}: ") for i in range(1, 5)]
         ans = self.get_valid_int("정답 번호 (1-4): ", 1, 4)
         self.quizzes.append(Quiz(q, choices, ans))
+        self.save_state()
         print("✅ 퀴즈가 추가되었습니다!")
 
     def list_quizzes(self) -> None:
@@ -103,5 +139,6 @@ class QuizGame:
             elif choice == 4:
                 self.show_score()
             elif choice == 5:
-                print("\n👋 게임을 종료합니다.")
+                self.save_state()
+                print("\n👋 데이터를 저장하고 게임을 종료합니다.")
                 break
