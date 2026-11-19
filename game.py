@@ -84,6 +84,12 @@ class QuizGame:
             print(f"[{idx}] {quiz.question}")
         print("-" * 40)
 
+    def show_score(self) -> None:
+        if self.best_score is None:
+            print("\nℹ️ 아직 퀴즈를 풀지 않았습니다.")
+        else:
+            print(f"\n🏆 최고 점수: {self.best_score}점")
+
     def run(self) -> None:
         while True:
             self.display_menu()
@@ -94,8 +100,8 @@ class QuizGame:
                 self.add_quiz()
             elif choice == 3:
                 self.list_quizzes()
+            elif choice == 4:
+                self.show_score()
             elif choice == 5:
                 print("\n👋 게임을 종료합니다.")
                 break
-            else:
-                print("🚧 준비 중인 기능입니다.")
