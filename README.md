@@ -47,4 +47,19 @@ quiz-game/
 }
 ```
 
-- Git clone 및 pull 실습 완료
+## 7. 실행 및 Git 로그 스크린샷
+
+### 개발 환경 설정
+![개발 환경 설정](screenshots/1_env.png)
+
+### 퀴즈 추가 및 목록 조회
+![퀴즈 추가 및 목록](screenshots/2_add_list.png)
+
+### 퀴즈 풀기 및 최고 점수 확인
+![퀴즈 풀기 및 점수](screenshots/3_play_score.png)
+
+### 프로그램 재실행 및 데이터 영속성 확인
+![데이터 불러오기](screenshots/4_reload.png)
+
+### Git 커밋 히스토리 및 브랜치 그래프
+![Git 로그 그래프](screenshots/5_git_log.png)
