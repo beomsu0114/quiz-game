@@ -33,11 +33,39 @@ class QuizGame:
         print("5. 종료")
         print("=" * 40)
 
+    def play_quiz(self) -> None:
+        if not self.quizzes:
+            print("\n⚠️ 등록된 퀴즈가 없습니다.")
+            return
+
+        total = len(self.quizzes)
+        correct = 0
+        print(f"\n📝 퀴즈를 시작합니다! (총 {total}문제)")
+
+        for idx, quiz in enumerate(self.quizzes, start=1):
+            quiz.display(idx)
+            ans = self.get_valid_int("정답 입력 (1-4): ", 1, 4)
+            if quiz.is_correct(ans):
+                print("✅ 정답입니다!")
+                correct += 1
+            else:
+                print(f"❌ 오답입니다! 정답은 {quiz.answer}번입니다.")
+
+        score = round((correct / total) * 100)
+        print("\n" + "=" * 40)
+        print(f"🏆 결과: {total}문제 중 {correct}문제 정답! ({score}점)")
+        if self.best_score is None or score > self.best_score:
+            self.best_score = score
+            print("🎉 새로운 최고 점수입니다!")
+        print("=" * 40)
+
     def run(self) -> None:
         while True:
             self.display_menu()
             choice = self.get_valid_int("선택: ", 1, 5)
-            if choice == 5:
+            if choice == 1:
+                self.play_quiz()
+            elif choice == 5:
                 print("\n👋 게임을 종료합니다.")
                 break
             else:
