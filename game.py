@@ -74,6 +74,16 @@ class QuizGame:
         self.quizzes.append(Quiz(q, choices, ans))
         print("✅ 퀴즈가 추가되었습니다!")
 
+    def list_quizzes(self) -> None:
+        if not self.quizzes:
+            print("\n⚠️ 등록된 퀴즈가 없습니다.")
+            return
+        print(f"\n📋 등록된 퀴즈 목록 (총 {len(self.quizzes)}개)")
+        print("-" * 40)
+        for idx, quiz in enumerate(self.quizzes, start=1):
+            print(f"[{idx}] {quiz.question}")
+        print("-" * 40)
+
     def run(self) -> None:
         while True:
             self.display_menu()
@@ -82,6 +92,8 @@ class QuizGame:
                 self.play_quiz()
             elif choice == 2:
                 self.add_quiz()
+            elif choice == 3:
+                self.list_quizzes()
             elif choice == 5:
                 print("\n👋 게임을 종료합니다.")
                 break
